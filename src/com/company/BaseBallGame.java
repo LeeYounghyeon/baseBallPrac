@@ -31,19 +31,19 @@ public class BaseBallGame {
     private boolean round() {
         Computer computer = new Computer(new Ball(getComputerBallList()));
 
-        oneRound(computer);
+        runOneRound(computer);
 
         return isRelpay();
     }
 
-    private void oneRound(Computer computer) {
+    private void runOneRound(Computer computer) {
         while (true) {
             Ball ball = new Ball(getUserList());
-            Map<String, Integer> map = computer.checkResult(ball);
+            Map<String, Integer> ballMap = computer.checkResult(ball);
 
-            printResult(map);
+            printResult(ballMap);
 
-            if (getWin(map)) {
+            if (getWinner(ballMap)) {
                 break;
             }
         }
@@ -62,14 +62,14 @@ public class BaseBallGame {
         System.out.println(SELECT_MESSAGE);
         String selectNumber = SCAN.nextLine();
 
-        if (isChar(selectNumber) || isEmpty(selectNumber) || checkNumber(selectNumber)) {
+        if (validInteger(selectNumber) || isEmpty(selectNumber) || checkNumber(selectNumber)) {
             return isRelpay();
         }
 
         return Integer.parseInt(selectNumber) == REPLAY;
     }
 
-    private boolean getWin(Map<String, Integer> map) {
+    private boolean getWinner(Map<String, Integer> map) {
         if (map.get(STRIKE) == 3) {
             System.out.println(WINNER_MESSAGE);
             return true;
@@ -129,7 +129,7 @@ public class BaseBallGame {
         return false;
     }
 
-    private boolean isChar(String input) {
+    private boolean validInteger(String input) {
         if (!Pattern.matches(PATTERN, input)) {
             System.err.println(INPUT_INTEGER_ERROR_MESSAGE);
             return true;
@@ -158,7 +158,7 @@ public class BaseBallGame {
         return false;
     }
 
-    private List<Integer> addUserList() {
+    private List<Integer> makeUserList() {
         List<Integer> uesrBallList = new ArrayList<>();
         String[] numberArr = inputNumber().split("");
 
@@ -174,7 +174,7 @@ public class BaseBallGame {
     }
 
     private List<Integer> getUserList() {
-        List<Integer> userBallList = addUserList();
+        List<Integer> userBallList = makeUserList();
 
         if (checkValid(userBallList)) {
             return getUserList();
@@ -188,14 +188,14 @@ public class BaseBallGame {
         System.out.print(INPUT_MESSAGE);
         String number = SCAN.nextLine();
 
-        if (isEmpty(number) || isChar(number) || isNotBound(number)) {
+        if (isEmpty(number) || validInteger(number) || isNotBound(number)) {
             return inputNumber();
         }
 
         return number;
     }
 
-    private Set<Integer> addSet() {
+    private Set<Integer> makeBallSet() {
         Set<Integer> ballSet = new HashSet<>();
 
         while (ballSet.size() != ONE_ROUND_BALL_LENGTH) {
@@ -206,7 +206,7 @@ public class BaseBallGame {
     }
 
     private List<Integer> getComputerBallList() {
-        List<Integer> computerBallList = new ArrayList<>(addSet());
+        List<Integer> computerBallList = new ArrayList<>(makeBallSet());
         return computerBallList;
     }
 
